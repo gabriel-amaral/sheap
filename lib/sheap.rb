@@ -41,10 +41,11 @@ class Sheap
   class Diff
     include Collection
 
-    attr_reader :before, :after
-    def initialize(before, after)
+    attr_reader :before, :after, :retained
+    def initialize(before, after, third)
       @before = Heap.wrap(before)
       @after = Heap.wrap(after)
+      @third = Heap.wrap(third) unless third.nil?
     end
 
     def retained
@@ -65,6 +66,9 @@ class Sheap
       end
       @before.each_object do |obj|
         set.delete(obj)
+      end
+      if !@third.nil?
+        set = Set.new(set.to_a & @third.objects)
       end
       set.to_a
     end
